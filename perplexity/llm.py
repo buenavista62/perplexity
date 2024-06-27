@@ -50,7 +50,7 @@ def process_pdf(uploaded_file, chunk_size, chunk_overlap):
         for i, embedding in enumerate(embeddings):
             annoy_index.add_item(i, embedding)
 
-        annoy_index.build(20)  # 20 trees
+        annoy_index.build(10)  
 
         index_to_docstore_id = {i: str(i) for i in range(len(documents))}
 
