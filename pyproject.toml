@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "perplexity"
+version = "0.1.0"
+description = ""
+authors = ["buenavista62 <sercan-ates@outlook.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+openai = "^1.35.4"
+python-dotenv = "^1.0.1"
+langchain-community = "^0.2.6"
+langchain-core = "^0.2.10"
+pymupdf4llm = "^0.0.6"
+pathlib = "^1.0.1"
+transformers = "^4.41.2"
+torch = "^2.3.1"
+annoy = "^1.17.3"
+sentence-transformers = "^3.0.1"
+langchain-huggingface = "^0.0.3"
+streamlit = "^1.36.0"
+ruff = "^0.5.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
