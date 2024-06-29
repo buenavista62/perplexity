@@ -12,7 +12,7 @@ import pymupdf4llm
 from annoy import AnnoyIndex
 
 
-def process_pdf(uploaded_file, chunk_size, chunk_overlap):
+def process_pdf(uploaded_file, embed_model, chunk_size, chunk_overlap, n_indexes):
     # Create a temporary file
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
         # Write the uploaded file data to the temporary file
@@ -38,7 +38,7 @@ def process_pdf(uploaded_file, chunk_size, chunk_overlap):
             documents.extend(page_docs)
 
         embedding_model = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/gtr-t5-large"
+            model_name = embed_model
         )
 
         texts = [doc.page_content for doc in documents]
