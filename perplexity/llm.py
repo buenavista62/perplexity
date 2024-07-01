@@ -6,7 +6,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.docstore import InMemoryDocstore
 from langchain_community.chat_models import ChatPerplexity
 from langchain.text_splitter import MarkdownTextSplitter
-
+from langchain.chains import ConversationalRetrievalChain
+from langchain.memory import ConversationBufferMemory
 import os
 import pymupdf4llm
 from annoy import AnnoyIndex
@@ -70,35 +71,24 @@ def process_pdf(uploaded_file, embed_model, chunk_size, chunk_overlap, n_indexes
         # Remove the temporary file
         os.unlink(tmp_file_path)
 
-
 def create_rag_chain(vectorstore):
-    # Create retriever
     retriever = vectorstore.as_retriever()
 
-    # Create chat model
     chat = ChatPerplexity(
         temperature=0.3,
         pplx_api_key=os.getenv("PERPLEXITY_API_KEY"),
         model="llama-3-sonar-small-32k-chat",
     )
 
-    # Create prompt template
-    system = (
-        "You are an artificial intelligence assistant. Use the following"
-        "pieces of context to answer the user's question. If you don't know the"
-        "answer, just say that you don't know, don't try to make up an answer."
+    memory = ConversationBufferMemory(
+        memory_key="chat_history",
+        return_messages=True
     )
-    human = "Context: {context}\n\nHuman: {question}\n\nAssistant:"
 
-    prompt = ChatPromptTemplate.from_messages([("system", system), ("human", human)])
-
-    # Create RAG chain
-    rag_chain = RetrievalQA.from_chain_type(
+    rag_chain = ConversationalRetrievalChain.from_llm(
         llm=chat,
-        chain_type="stuff",
         retriever=retriever,
-        chain_type_kwargs={"prompt": prompt},
-        return_source_documents=True,
+        memory=memory,
         verbose=True,
     )
 
